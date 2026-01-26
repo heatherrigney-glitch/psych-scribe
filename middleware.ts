@@ -1,24 +1,10 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
-export function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl
-
-  // Allow login + API routes through
-  if (
-    pathname.startsWith('/login') ||
-    pathname.startsWith('/api') ||
-    pathname.startsWith('/_next') ||
-    pathname.startsWith('/favicon')
-  ) {
-    return NextResponse.next()
-  }
-
-  const authed = req.cookies.get('psych_auth')?.value
-
-  if (!authed) {
-    return NextResponse.redirect(new URL('/login', req.url))
-  }
-
-  return NextResponse.next()
+export function middleware(_req: NextRequest) {
+  return NextResponse.next();
 }
+
+export const config = {
+  matcher: ["/:path*"],
+};

@@ -14,15 +14,11 @@ export function middleware(req: NextRequest) {
     return NextResponse.next()
   }
 
-  const authed = req.cookies.get('authed')?.value
+  const authed = req.cookies.get('psych_auth')?.value
 
   if (!authed) {
     return NextResponse.redirect(new URL('/login', req.url))
   }
 
   return NextResponse.next()
-}
-
-export const config = {
-  matcher: ['/((?!api|_next|favicon.ico).*)'],
 }

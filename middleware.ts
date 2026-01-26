@@ -4,15 +4,19 @@ import type { NextRequest } from 'next/server'
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
 
-  // allow the login page + login API
-  if (pathname.startsWith('/login') || pathname.startsWith('/api/login')) {
+  // Allow login + API routes through
+  if (
+    pathname.startsWith('/login') ||
+    pathname.startsWith('/api') ||
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/favicon')
+  ) {
     return NextResponse.next()
   }
 
-  // protect /scribe (and optionally /)
-  const authed = req.cookies.get('psych_auth')?.value === '1'
+  const authed = req.cookies.get('authed')?.value
 
-  if (!authed && (pathname === '/' || pathname.startsWith('/scribe'))) {
+  if (!authed) {
     return NextResponse.redirect(new URL('/login', req.url))
   }
 
@@ -20,5 +24,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/', '/scribe/:path*', '/login', '/api/login'],
+  matcher: ['/((?!api|_next|favicon.ico).*)'],
 }
